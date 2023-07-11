@@ -3,6 +3,7 @@
 <head>
     <title>Golden Day Calculator</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="script.js"></script>
 </head>
 <body>
     <header>
@@ -18,9 +19,16 @@
     </nav>
     
     <main>
-        <h2>Homepage</h2>
-        <p>This is the homepage of the Golden Day Calculator website.</p>
-        <p>Use the navigation menu above to access other pages.</p>
+        <h2>Golden Day Calculator</h2>
+        
+        <form>
+            <label for="date">Select a Date:</label>
+            <input type="date" id="date" name="date" required>
+            
+            <button type="button" onclick="calculateGoldenDay()">Calculate</button>
+        </form>
+        
+        <div id="result"></div>
     </main>
     
     <footer>
