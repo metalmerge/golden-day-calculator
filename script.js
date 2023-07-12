@@ -66,25 +66,31 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const totalResult = `${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}`;
       
-      let classification = 'Limbo';
+      let classification = '';
       if (forPercentage === '100') classification = 'Perfect Game';
       else if (forPercentage >= '75') classification = 'Rhodium Day';
       else if (forPercentage >= '67') classification = 'Titanium Day';
       else if (forPercentage >= '60') classification = 'Diamond Day';
       else if (forPercentage >= '51') classification = 'Golden Day';
+      else classification = 'Limbo';
       
-      const coalitionResults = array.reduce((result, item) => {
-        if (item.coalition === 'Green') return result;
-        return `${result}${item.name}: ${((item.votes / totalVotes) * 100).toFixed(0)}% (${item.votes})\n`;
-      }, '');
+      const forResults = forList
+        .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+        .join('\n');
+      
+      const againstResults = againstList
+        .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+        .join('\n');
       
       resultsContainer.innerHTML = `
-        <p>${againstResult}</p>
-        <p>${forResult}</p>
-        <p>Total: ${totalResult}</p>
+        <p>${array.filter(item => item.coalition === 'Blue')[0].coalition} Vote ${forPercentage}% (${forTotal}/${forTotal + againstTotal})</p>
+        <p>${array.filter(item => item.coalition === 'Red')[0].coalition} Vote ${againstPercentage}% (${againstTotal}/${forTotal + againstTotal})</p>
+        <p>Total: ${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}</p>
         <p>${classification}</p>
         <p>For:</p>
-        <pre>${coalitionResults}</pre>
+        <pre>${forResults}</pre>
+        <p>Against:</p>
+        <pre>${againstResults}</pre>
       `;
     });
   });
