@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     const calculateButton = document.getElementById('calculateButton');
-    const totalsResult = document.getElementById('totalsResult');
+    const resultsContainer = document.getElementById('resultsContainer');
   
     calculateButton.addEventListener('click', () => {
       const againstList = Array.from(againstItems.children);
@@ -56,7 +56,42 @@ document.addEventListener('DOMContentLoaded', () => {
         return total + votes;
       }, 0);
       
-      totalsResult.textContent = `Against Total: ${againstTotal} | For Total: ${forTotal}`;
+      const totalVotes = againstTotal + forTotal;
+      
+      const againstPercentage = ((againstTotal / totalVotes) * 100).toFixed(0);
+      const forPercentage = ((forTotal / totalVotes) * 100).toFixed(0);
+      
+      const againstResult = `${array.filter(item => item.coalition !== 'Green').length} ${againstPercentage}% (${againstTotal})`;
+      const forResult = `${array.filter(item => item.coalition === 'Green').length} ${forPercentage}% (${forTotal})`;
+      
+      const totalResult = `${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}`;
+      
+      let classification = '';
+      if (forPercentage === '100') classification = 'Perfect Game';
+      else if (forPercentage >= '75') classification = 'Rhodium Day';
+      else if (forPercentage >= '67') classification = 'Titanium Day';
+      else if (forPercentage >= '60') classification = 'Diamond Day';
+      else if (forPercentage >= '51') classification = 'Golden Day';
+      else classification = 'Limbo';
+      
+      const forResults = forList
+        .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+        .join('\n');
+      
+      const againstResults = againstList
+        .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+        .join('\n');
+      
+      resultsContainer.innerHTML = `
+        <p>${array.filter(item => item.coalition === 'Blue')[0].coalition} Vote ${forPercentage}% (${forTotal}/${forTotal + againstTotal})</p>
+        <p>${array.filter(item => item.coalition === 'Red')[0].coalition} Vote ${againstPercentage}% (${againstTotal}/${forTotal + againstTotal})</p>
+        <p>Total: ${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}</p>
+        <p>${classification}</p>
+        <p>For:</p>
+        <pre>${forResults}</pre>
+        <p>Against:</p>
+        <pre>${againstResults}</pre>
+      `;
     });
   });
   
