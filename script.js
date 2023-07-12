@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     const calculateButton = document.getElementById('calculateButton');
-    const totalsResult = document.getElementById('totalsResult');
+    const resultsContainer = document.getElementById('resultsContainer');
   
     calculateButton.addEventListener('click', () => {
       const againstList = Array.from(againstItems.children);
@@ -56,7 +56,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return total + votes;
       }, 0);
       
-      totalsResult.textContent = `Against Total: ${againstTotal} | For Total: ${forTotal}`;
+      const totalVotes = againstTotal + forTotal;
+      
+      const againstPercentage = ((againstTotal / totalVotes) * 100).toFixed(0);
+      const forPercentage = ((forTotal / totalVotes) * 100).toFixed(0);
+      
+      const againstResult = `${array.filter(item => item.coalition !== 'Green').length} ${againstPercentage}% (${againstTotal})`;
+      const forResult = `${array.filter(item => item.coalition === 'Green').length} ${forPercentage}% (${forTotal})`;
+      
+      const totalResult = `${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}`;
+      
+      let classification = 'Limbo';
+      if (forPercentage === '100') classification = 'Perfect Game';
+      else if (forPercentage >= '75') classification = 'Rhodium Day';
+      else if (forPercentage >= '67') classification = 'Titanium Day';
+      else if (forPercentage >= '60') classification = 'Diamond Day';
+      else if (forPercentage >= '51') classification = 'Golden Day';
+      
+      const coalitionResults = array.reduce((result, item) => {
+        if (item.coalition === 'Green') return result;
+        return `${result}${item.name}: ${((item.votes / totalVotes) * 100).toFixed(0)}% (${item.votes})\n`;
+      }, '');
+      
+      resultsContainer.innerHTML = `
+        <p>${againstResult}</p>
+        <p>${forResult}</p>
+        <p>Total: ${totalResult}</p>
+        <p>${classification}</p>
+        <p>For:</p>
+        <pre>${coalitionResults}</pre>
+      `;
     });
   });
   
