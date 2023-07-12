@@ -38,5 +38,25 @@ document.addEventListener('DOMContentLoaded', () => {
       parentList.removeChild(li);
       targetList.appendChild(li);
     }
+  
+    const calculateButton = document.getElementById('calculateButton');
+    const totalsResult = document.getElementById('totalsResult');
+  
+    calculateButton.addEventListener('click', () => {
+      const againstList = Array.from(againstItems.children);
+      const forList = Array.from(forItems.children);
+      
+      const againstTotal = againstList.reduce((total, item) => {
+        const votes = parseInt(item.textContent.split(':')[1].trim());
+        return total + votes;
+      }, 0);
+      
+      const forTotal = forList.reduce((total, item) => {
+        const votes = parseInt(item.textContent.split(':')[1].trim());
+        return total + votes;
+      }, 0);
+      
+      totalsResult.textContent = `Against Total: ${againstTotal} | For Total: ${forTotal}`;
+    });
   });
   
