@@ -92,5 +92,39 @@ document.addEventListener('DOMContentLoaded', () => {
         <p>Against:</p>
         <pre>${againstResults}</pre>
       `;
+
+    // Send data to the database
+    sendDataToDatabase(forPercentage);
   });
+
+  function sendDataToDatabase(forPercentage) {
+    const currentDate = new Date().toISOString();
+
+    // Replace `YOUR_DATABASE_URL` with your Firebase Realtime Database URL
+    const databaseURL = 'https://golden-days-42906-default-rtdb.firebaseio.com/';
+    const endpointURL = `${databaseURL}/votes.json`;
+
+    const data = JSON.stringify({
+      forPercentage,
+      currentDate
+    });
+
+    fetch(endpointURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Data sent successfully to the database');
+        } else {
+          throw new Error('Error sending data to the database');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 });
