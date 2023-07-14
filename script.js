@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const array = [
+  let array = [
     { name: 'Religion', votes: 53, coalition: 'Blue' },
     { name: 'Motivation', votes: 37, coalition: 'Blue' },
     { name: 'Maintenance', votes: 37, coalition: 'Blue' },
@@ -26,7 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Populate initial against list
   array.forEach(item => {
     const li = document.createElement('li');
-    li.textContent = `${item.name}: ${item.votes}`;
+    li.innerHTML = `
+      <span>${item.name}: <span class="vote-count">${item.votes}</span></span>
+      <button class="edit-button">Edit</button>
+    `;
     li.setAttribute('data-coalition', item.coalition);
     li.addEventListener('click', () => switchList(li));
     againstItems.appendChild(li);
@@ -47,12 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const forList = Array.from(forItems.children);
 
     const againstTotal = againstList.reduce((total, item) => {
-      const votes = parseInt(item.textContent.split(':')[1].trim());
+      const votes = parseInt(item.querySelector('.vote-count').textContent);
       return total + votes;
     }, 0);
 
     const forTotal = forList.reduce((total, item) => {
-      const votes = parseInt(item.textContent.split(':')[1].trim());
+      const votes = parseInt(item.querySelector('.vote-count').textContent);
       return total + votes;
     }, 0);
 
@@ -75,11 +78,11 @@ document.addEventListener('DOMContentLoaded', () => {
     else classification = 'Limbo';
 
     const forResults = forList
-      .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+      .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.querySelector('.vote-count').textContent) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.querySelector('.vote-count').textContent)})`)
       .join('\n');
 
     const againstResults = againstList
-      .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.textContent.split(':')[1].trim()) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.textContent.split(':')[1].trim())})`)
+      .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.querySelector('.vote-count').textContent) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.querySelector('.vote-count').textContent)})`)
       .join('\n');
 
     resultsContainer.innerHTML = `
@@ -98,15 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function sendDataToDatabase(forPercentage) {
-    const currentDate = new Date().toISOString();
+    const currentDate = new Date().toLocaleDateString('en-US');
 
     // Replace `YOUR_DATABASE_URL` with your Firebase Realtime Database URL
     const databaseURL = 'https://golden-days-42906-default-rtdb.firebaseio.com/';
     const endpointURL = `${databaseURL}/votes.json`;
 
     const data = JSON.stringify({
-      forPercentage,
-      currentDate
+      forPercentage: `${forPercentage}% ${currentDate}`
     });
 
     fetch(endpointURL, {
@@ -127,4 +129,22 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error(error);
       });
   }
+
+  // Add event listeners to the edit buttons
+  const editButtons = document.querySelectorAll('.edit-button');
+  editButtons.forEach(button => {
+    button.addEventListener('click', event => {
+      const listItem = event.target.parentNode;
+      const voteCount = listItem.querySelector('.vote-count');
+      const itemName = listItem.textContent.split(':')[0];
+
+      const newVoteCount = prompt(`Enter new vote count for ${itemName}:`, voteCount.textContent);
+      if (newVoteCount !== null) {
+        const parsedVoteCount = parseInt(newVoteCount);
+        if (!isNaN(parsedVoteCount)) {
+          voteCount.textContent = parsedVoteCount;
+        }
+      }
+    });
+  });
 });
