@@ -19,11 +19,11 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Programming', votes: 48, coalition: 'Blue' },
     { name: 'Knowledge', votes: 20, coalition: 'Blue' }
   ];
-
+  // Get references to the against and for lists in the HTML
   const againstItems = document.getElementById('againstItems');
   const forItems = document.getElementById('forItems');
 
-  // Populate initial against list
+  // Populate the initial against list with items from the array
   array.forEach(item => {
     const li = document.createElement('li');
     li.innerHTML = `
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     againstItems.appendChild(li);
   });
 
+  // Function to switch an item between the against and for lists
   function switchList(li) {
     const parentList = li.parentNode;
     const targetList = parentList.id === 'againstItems' ? forItems : againstItems;
@@ -42,13 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
     targetList.appendChild(li);
   }
 
+  // Get references to the calculate button and results container in the HTML
   const calculateButton = document.getElementById('calculateButton');
   const resultsContainer = document.getElementById('resultsContainer');
 
+  // Add a click event listener to the calculate button
   calculateButton.addEventListener('click', () => {
+    // Get the lists of items from the against and for lists
     const againstList = Array.from(againstItems.children);
     const forList = Array.from(forItems.children);
 
+    // Calculate the total votes for against and for items
     const againstTotal = againstList.reduce((total, item) => {
       const votes = parseInt(item.querySelector('.vote-count').textContent);
       return total + votes;
@@ -61,14 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totalVotes = againstTotal + forTotal;
 
+    // Calculate the percentages and results
     const againstPercentage = ((againstTotal / totalVotes) * 100).toFixed(0);
     const forPercentage = ((forTotal / totalVotes) * 100).toFixed(0);
 
     const againstResult = `${array.filter(item => item.coalition !== 'Green').length} ${againstPercentage}% (${againstTotal})`;
     const forResult = `${array.filter(item => item.coalition === 'Green').length} ${forPercentage}% (${forTotal})`;
 
-    const totalResult = `${((forTotal / totalVotes) * 100).toFixed(0)}% ${totalVotes}/${array.length}`;
+    const totalResult = `${((forTotal / totalVotes) * 100).toFixed(0)}% ${forTotal}/${array.length}`;
 
+    // Determine the classification based on the forPercentage
     let classification = '';
     if (forPercentage === '100') classification = 'Perfect Game';
     else if (forPercentage >= '75') classification = 'Rhodium Day';
@@ -77,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (forPercentage >= '51') classification = 'Golden Day';
     else classification = 'Limbo';
 
+    // Generate the results for the for and against lists
     const forResults = forList
       .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.querySelector('.vote-count').textContent) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.querySelector('.vote-count').textContent)})`)
       .join('\n');
@@ -85,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .map(item => `${item.textContent.split(':')[0]}: ${((parseInt(item.querySelector('.vote-count').textContent) / totalVotes) * 100).toFixed(0)}% (${parseInt(item.querySelector('.vote-count').textContent)})`)
       .join('\n');
 
+    // Update the results container with the calculated results
     resultsContainer.innerHTML = `
         <p>${array.filter(item => item.coalition === 'Blue')[0].coalition} Vote ${forPercentage}% (${forTotal}/${forTotal + againstTotal})</p>
         <p>${array.filter(item => item.coalition === 'Red')[0].coalition} Vote ${againstPercentage}% (${againstTotal}/${forTotal + againstTotal})</p>
@@ -96,10 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
         <pre>${againstResults}</pre>
       `;
 
-    // Send data to the database
+    // Send the calculated data to the database
     sendDataToDatabase(forPercentage);
   });
 
+  // Function to send the calculated data to the database
   function sendDataToDatabase(forPercentage) {
     const currentDate = new Date().toLocaleDateString('en-US');
 
@@ -111,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
       forPercentage: `${forPercentage}% ${currentDate}`
     });
 
+    // Send a POST request to the endpoint URL with the data
     fetch(endpointURL, {
       method: 'POST',
       headers: {
