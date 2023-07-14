@@ -1,2 +1,2 @@
 # golden-day-calculator
-Website to calculate how good a day was.
+Website to calculate with metrics how well a day went.
