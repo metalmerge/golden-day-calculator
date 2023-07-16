@@ -4,7 +4,6 @@
 <head>
     <title>Data Storage</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="script.js"></script>
 </head>
 
@@ -25,17 +24,12 @@
     <main>
         <h2>Data Storage</h2>
 
-        <div id="chartContainer">
-            <canvas id="chart"></canvas>
-        </div>
-
         <div id="dataContainer">
             <h3>Calculated Results</h3>
             <ul id="resultsList"></ul>
         </div>
 
         <div id="buttonsContainer">
-            <button id="editButton">Edit Data</button>
             <button id="clearButton">Clear Data</button>
         </div>
     </main>
@@ -58,7 +52,7 @@
                         const { forPercentage, currentDate } = data[key];
                         const resultItem = document.createElement('li');
                         resultItem.innerHTML = `
-                            <span>${forPercentage}% : ${currentDate}</span>
+                            <span>${forPercentage}% : ${formatDate(new Date(currentDate))}</span>
                             <button class="edit-button">Edit</button>
                         `;
                         resultsList.appendChild(resultItem);
@@ -69,11 +63,11 @@
                             const voteCount = listItem.querySelector('span');
                             const itemName = voteCount.textContent.split(':')[0];
 
-                            const newVoteCount = prompt(`Enter new vote count for ${itemName}:`, voteCount.textContent);
+                            const newVoteCount = prompt(`Enter new vote count for ${itemName}:`, voteCount.textContent.split(':')[0]);
                             if (newVoteCount !== null) {
                                 const parsedVoteCount = parseInt(newVoteCount);
                                 if (!isNaN(parsedVoteCount)) {
-                                    voteCount.textContent = `${parsedVoteCount}% : ${currentDate}`;
+                                    voteCount.textContent = `${parsedVoteCount}% : ${formatDate(new Date(currentDate))}`;
                                 }
                             }
                         });
@@ -118,6 +112,12 @@
                 .catch(error => {
                     console.error(error);
                 });
+        }
+
+        function formatDate(date) {
+            const options = { month: '2-digit', day: '2-digit', year: 'numeric' };
+            const formattedDate = date.toLocaleDateString('en-US', options);
+            return formattedDate;
         }
     </script>
 </body>
