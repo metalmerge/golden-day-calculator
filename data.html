@@ -16,8 +16,9 @@
     <nav>
         <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="calculator.html">Golden Day Calculator</a></li>
+            <li><a href="calculator.html">Vote Calculator</a></li>
             <li><a href="data.html">Data Storage</a></li>
+            <li><a href="quest.html">Quests</a></li>
         </ul>
     </nav>
 
@@ -56,14 +57,68 @@
                     for (const key in data) {
                         const { forPercentage, currentDate } = data[key];
                         const resultItem = document.createElement('li');
-                        resultItem.textContent = `${forPercentage}% : ${currentDate}`;
+                        resultItem.innerHTML = `
+                            <span>${forPercentage}% : ${currentDate}</span>
+                            <button class="edit-button">Edit</button>
+                        `;
                         resultsList.appendChild(resultItem);
+
+                        const editButton = resultItem.querySelector('.edit-button');
+                        editButton.addEventListener('click', event => {
+                            const listItem = event.target.parentNode;
+                            const voteCount = listItem.querySelector('span');
+                            const itemName = voteCount.textContent.split(':')[0];
+
+                            const newVoteCount = prompt(`Enter new vote count for ${itemName}:`, voteCount.textContent);
+                            if (newVoteCount !== null) {
+                                const parsedVoteCount = parseInt(newVoteCount);
+                                if (!isNaN(parsedVoteCount)) {
+                                    voteCount.textContent = `${parsedVoteCount}% : ${currentDate}`;
+                                }
+                            }
+                        });
                     }
                 })
                 .catch(error => {
                     console.error(error);
                 });
+
+            // Add event listener to the clear button
+            const clearButton = document.getElementById('clearButton');
+            clearButton.addEventListener('click', () => {
+                confirmClearData();
+            });
         });
+
+        function confirmClearData() {
+            const confirmClear = confirm('Are you sure you want to clear the data?');
+            if (confirmClear) {
+                clearData();
+            }
+        }
+
+        function clearData() {
+            const resultsList = document.getElementById('resultsList');
+            resultsList.innerHTML = '';
+
+            // Replace `YOUR_DATABASE_URL` with your Firebase Realtime Database URL
+            const databaseURL = 'https://golden-days-42906-default-rtdb.firebaseio.com/';
+            const endpointURL = `${databaseURL}/votes.json`;
+
+            fetch(endpointURL, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Data cleared successfully.');
+                    } else {
+                        throw new Error('Error clearing data.');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
     </script>
 </body>
 

@@ -159,19 +159,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Add event listener to the edit button
-  const editButton = document.getElementById('editButton');
-  editButton.addEventListener('click', () => {
-    alert('Edit data functionality can be implemented here.');
-  });
 
-  // Add event listener to the clear button
-  const clearButton = document.getElementById('clearButton');
-  clearButton.addEventListener('click', () => {
-    const confirmClear = confirm('Are you sure you want to clear the data?');
-    if (confirmClear) {
-      // Clear data functionality can be implemented here.
-      alert('Data cleared successfully.');
-    }
-  });
 });
