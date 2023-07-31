@@ -10,14 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Watch', votes: 20, coalition: 'Red' },
     { name: 'Work', votes: 50, coalition: 'Green' },
     { name: 'Pomodomo', votes: 30, coalition: 'Blue' },
-    { name: 'Invest', votes: 0, coalition: 'Green' },
     { name: 'Streak', votes: 0, coalition: 'Green' },
+    { name: 'Special Occasion', votes: 0, coalition: 'Green' },
     { name: 'Sleep', votes: 50, coalition: 'Red' },
     { name: 'Music', votes: 20, coalition: 'Red' },
     { name: 'Social', votes: 17, coalition: 'Red' },
     { name: 'Fun', votes: 6, coalition: 'Red' },
     { name: 'Programming', votes: 48, coalition: 'Blue' },
-    { name: 'Knowledge', votes: 20, coalition: 'Blue' }
+    { name: 'Knowledge', votes: 20, coalition: 'Blue' },
+    { name: 'Finance', votes: 50, coalition: 'Green' },
   ];
   // Get references to the against and for lists in the HTML
   const againstItems = document.getElementById('againstItems');
