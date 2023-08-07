@@ -3,13 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Religion', votes: 53, coalition: 'Blue' },
     { name: 'Motivation', votes: 37, coalition: 'Blue' },
     { name: 'Maintenance', votes: 37, coalition: 'Blue' },
-    { name: 'Mental', votes: 42, coalition: 'Red' },
+    { name: '(Mental) Health', votes: 42, coalition: 'Red' },
     { name: 'Education', votes: 32, coalition: 'Blue' },
     { name: 'Sports', votes: 47, coalition: 'Blue' },
     { name: 'Exercise', votes: 41, coalition: 'Blue' },
     { name: 'Watch', votes: 20, coalition: 'Red' },
     { name: 'Work', votes: 50, coalition: 'Green' },
-    { name: 'Pomodomo', votes: 30, coalition: 'Blue' },
+    // { name: 'Pomodomo', votes: 30, coalition: 'Blue' },
     { name: 'Streak', votes: 0, coalition: 'Green' },
     { name: 'Special Occasion', votes: 0, coalition: 'Green' },
     { name: 'Sleep', votes: 50, coalition: 'Red' },
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { name: 'Fun', votes: 6, coalition: 'Red' },
     { name: 'Programming', votes: 48, coalition: 'Blue' },
     { name: 'Knowledge', votes: 20, coalition: 'Blue' },
-    { name: 'Finance', votes: 50, coalition: 'Green' },
+    { name: 'Finance', votes: 30, coalition: 'Green' },
   ];
   // Get references to the against and for lists in the HTML
   const againstItems = document.getElementById('againstItems');
